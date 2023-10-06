@@ -1,4 +1,4 @@
-package com.example.desafioandroid
+package com.example.desafioandroid.data.remote
 
 import retrofit2.http.GET
 

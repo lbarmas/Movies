@@ -34,8 +34,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import com.example.desafioandroid.data.remote.ServerMovie
 import com.example.desafioandroid.ui.theme.DesafioAndroidTheme
-
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
@@ -43,7 +43,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             DesafioAndroidTheme {
-                // LaunchedEffect(key1 = true){//Salir del ciclo de recomposicion y no se ejecute una y otra vez (true)
+                // LaunchedEffect(key1 = true){ //Salir del ciclo de recomposicion y no se ejecute una y otra vez (true)
                 // En xml is val viewModel: MainViewModel by viewModels()
 
                 val viewModel: MainViewModel = viewModel() //compose

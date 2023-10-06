@@ -1,4 +1,4 @@
-package com.example.desafioandroid
+package com.example.desafioandroid.data.remote
 
 data class ServerMovie(
     val adult: Boolean,
