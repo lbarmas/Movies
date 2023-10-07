@@ -30,8 +30,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import com.example.desafioandroid.data.Movie
 import com.example.desafioandroid.data.local.MoviesDao
-import com.example.desafioandroid.data.remote.ServerMovie
 import com.example.desafioandroid.ui.theme.MoviesTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -79,7 +79,7 @@ fun Home(moviesDao: MoviesDao) {
 }
 
 @Composable
-fun MovieItem(movie: ServerMovie, onClick: () -> Unit) {
+fun MovieItem(movie: Movie, onClick: () -> Unit) {
     Column(
         modifier = Modifier.clickable(onClick = onClick)
     )
@@ -87,7 +87,7 @@ fun MovieItem(movie: ServerMovie, onClick: () -> Unit) {
         Box {
 
             AsyncImage(
-                model = "https://image.tmdb.org/t/p/w185/${movie.poster_path}",
+                model = "https://image.tmdb.org/t/p/w185/${movie.posterPath}",
                 contentDescription = movie.title,
                 modifier = Modifier
                     .fillMaxWidth()

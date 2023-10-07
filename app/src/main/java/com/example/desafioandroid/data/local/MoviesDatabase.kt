@@ -8,13 +8,11 @@ import androidx.room.Query
 import androidx.room.RoomDatabase
 import androidx.room.Update
 import com.example.desafioandroid.data.Movie
-import com.example.desafioandroid.data.remote.ServerMovie
 
 @Database(entities = [LocalMovie::class], version = 1)
 abstract class MoviesDatabase : RoomDatabase() {
     abstract fun moviesDao(): MoviesDao
 }
-
 @Dao
 interface MoviesDao {
     @Query("SELECT * FROM LocalMovie")

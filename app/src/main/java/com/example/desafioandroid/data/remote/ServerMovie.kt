@@ -1,7 +1,5 @@
 package com.example.desafioandroid.data.remote
 
-import androidx.compose.runtime.currentComposer
-import com.example.desafioandroid.data.Movie
 import com.example.desafioandroid.data.local.LocalMovie
 
 data class ServerMovie(

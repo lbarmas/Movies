@@ -6,7 +6,7 @@ import com.example.desafioandroid.data.Movie
 import com.example.desafioandroid.data.local.MoviesDao
 import com.example.desafioandroid.data.local.toMovie
 import com.example.desafioandroid.data.remote.MoviesService
-import com.example.desafioandroid.data.remote.ServerMovie
+import com.example.desafioandroid.data.remote.toLocalMovie
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -33,6 +33,7 @@ class HomeViewModel(private val dao: MoviesDao) : ViewModel() {
                         .create(MoviesService::class.java)
                         .getMovies()
                         .results
+                        .map { it.toLocalMovie() }
                 )
             }
             _state.value = UIState(
