@@ -12,9 +12,9 @@ import com.example.desafioandroid.ui.screens.home.Home
 import com.example.desafioandroid.ui.theme.MoviesTheme
 
 class MainActivity : ComponentActivity() {
+    private lateinit var db : MoviesDatabase
     override fun onCreate(savedInstanceState: Bundle?) {
-
-        val db = Room.databaseBuilder(
+        db = Room.databaseBuilder(
             applicationContext,
             MoviesDatabase::class.java,  "movies-database"
         ).build()
