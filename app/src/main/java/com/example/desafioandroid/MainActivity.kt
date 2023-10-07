@@ -20,16 +20,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.room.Room
 import coil.compose.AsyncImage
+import com.example.desafioandroid.data.local.MoviesDatabase
 import com.example.desafioandroid.data.remote.ServerMovie
 import com.example.desafioandroid.ui.screens.home.Home
 import com.example.desafioandroid.ui.theme.MoviesTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        val db = Room.databaseBuilder(
+            applicationContext,
+            MoviesDatabase::class.java,  "movies-database"
+        ).build()
         super.onCreate(savedInstanceState)
         setContent {
-         Home()
+         Home(db.moviesDao())
         }
     }
 }

@@ -30,14 +30,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import com.example.desafioandroid.data.local.MoviesDao
 import com.example.desafioandroid.data.remote.ServerMovie
 import com.example.desafioandroid.ui.theme.MoviesTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Home() {
+fun Home(moviesDao: MoviesDao) {
     MoviesTheme {
-        val viewModel: HomeViewModel = viewModel()
+        val viewModel: HomeViewModel = viewModel{HomeViewModel(moviesDao)}
         val state =
             viewModel.state.collectAsState()
 

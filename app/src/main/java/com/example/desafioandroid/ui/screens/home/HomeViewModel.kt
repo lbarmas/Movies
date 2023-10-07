@@ -2,6 +2,9 @@ package com.example.desafioandroid.ui.screens.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.desafioandroid.data.Movie
+import com.example.desafioandroid.data.local.MoviesDao
+import com.example.desafioandroid.data.local.toMovie
 import com.example.desafioandroid.data.remote.MoviesService
 import com.example.desafioandroid.data.remote.ServerMovie
 import kotlinx.coroutines.delay
@@ -11,34 +14,43 @@ import kotlinx.coroutines.launch
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class HomeViewModel : ViewModel() {
-        private val _state = MutableStateFlow(UIState()) //MutableLiveData
-        var state: StateFlow<UIState> = _state //LiveData<UIState>
+class HomeViewModel(private val dao: MoviesDao) : ViewModel() {
+    private val _state = MutableStateFlow(UIState()) //MutableLiveData
+    var state: StateFlow<UIState> = _state //LiveData<UIState>
+
     init {
-       viewModelScope.launch {
-           _state.value = UIState(loading = true)
-           delay(2000)
-           _state.value = UIState(
-               loading = false,
-               movie = Retrofit.Builder()
-                .baseUrl("https://api.themoviedb.org/3/")
-                //gson factory
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-                .create(MoviesService::class.java)
-                .getMovies()
-                .results)
+        viewModelScope.launch {
+            val isDbEmpty = dao.countMovie() == 0
+            if (isDbEmpty) {
+                _state.value = UIState(loading = true)
+                delay(2000)
+                dao.insertAllMovies(
+                    Retrofit.Builder()
+                        .baseUrl("https://api.themoviedb.org/3/")
+                        //gson factory
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build()
+                        .create(MoviesService::class.java)
+                        .getMovies()
+                        .results
+                )
+            }
+            _state.value = UIState(
+                loading = false,
+                movie = dao.getMovies().map { it.toMovie() })
         }
     }
+
     data class UIState(
         val loading: Boolean = false,
-        val movie: List<ServerMovie> = emptyList()
+        val movie: List<Movie> = emptyList()
     )
 
-    fun onMovieClick(movie: ServerMovie){
+    fun onMovieClick(movie: Movie) {
         val movies = _state.value.movie.toMutableList()
-        movies.replaceAll{
-            if(it.id == movie.id) movie.copy(favorite = !movie.favorite) else it }
-            _state.value = _state.value.copy(movie = movies)
+        movies.replaceAll {
+            if (it.id == movie.id) movie.copy(favorite = !movie.favorite) else it
         }
+        _state.value = _state.value.copy(movie = movies)
     }
+}

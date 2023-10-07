@@ -1,5 +1,9 @@
 package com.example.desafioandroid.data.remote
 
+import androidx.compose.runtime.currentComposer
+import com.example.desafioandroid.data.Movie
+import com.example.desafioandroid.data.local.LocalMovie
+
 data class ServerMovie(
     val adult: Boolean,
     val backdrop_path: String,
@@ -16,4 +20,12 @@ data class ServerMovie(
     val vote_average: Double,
     val vote_count: Int,
     val favorite: Boolean = false
+)
+
+fun ServerMovie.toLocalMovie() = LocalMovie(
+    id = id,
+    title = title,
+    overview = overview,
+    posterPath = poster_path,
+    favorite = favorite
 )
