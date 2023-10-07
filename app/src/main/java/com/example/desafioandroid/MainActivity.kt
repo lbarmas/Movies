@@ -42,48 +42,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            DesafioAndroidTheme {
-                // LaunchedEffect(key1 = true){ //Salir del ciclo de recomposicion y no se ejecute una y otra vez (true)
-                // En xml is val viewModel: MainViewModel by viewModels()
 
-                val viewModel: MainViewModel = viewModel() //compose
-                val state =
-                    viewModel.state.collectAsState() // observeAsState(MainViewModel.UIState())
-
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Scaffold(
-                        topBar = { TopAppBar(title = { Text(text = "Movies") }) }
-                    ) { padding ->
-                        if (state.value.loading) {
-                            Box(
-                                modifier = Modifier.fillMaxSize(),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                CircularProgressIndicator()
-                            }
-                        }
-                        if (state.value.movie.isNotEmpty()) {
-                            LazyVerticalGrid(
-                                columns = GridCells.Adaptive(120.dp),
-                                modifier = Modifier.padding(padding),
-                                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                                verticalArrangement = Arrangement.spacedBy(4.dp),
-                                contentPadding = PaddingValues(4.dp)
-                            ) {
-                                items(state.value.movie) { movie ->
-                                    MovieItem(
-                                        movie,
-                                        onClick = { viewModel.onMovieClick(movie) })
-                                }
-                            }
-                        }
-                    }
-                }
-            }
         }
     }
 }
