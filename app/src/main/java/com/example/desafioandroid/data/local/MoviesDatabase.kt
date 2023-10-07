@@ -42,3 +42,11 @@ fun LocalMovie.toMovie() = Movie(
     posterPath = posterPath,
     favorite = favorite
 )
+
+fun Movie.toLocalMovie() = LocalMovie(
+    id = id,
+    title = title,
+    overview = overview,
+    posterPath = posterPath,
+    favorite = favorite
+)

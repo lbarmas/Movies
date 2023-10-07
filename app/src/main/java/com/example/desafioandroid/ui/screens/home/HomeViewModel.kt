@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.desafioandroid.data.Movie
 import com.example.desafioandroid.data.local.MoviesDao
+import com.example.desafioandroid.data.local.toLocalMovie
 import com.example.desafioandroid.data.local.toMovie
 import com.example.desafioandroid.data.remote.MoviesService
 import com.example.desafioandroid.data.remote.toLocalMovie
@@ -47,11 +48,14 @@ class HomeViewModel(private val dao: MoviesDao) : ViewModel() {
         val movie: List<Movie> = emptyList()
     )
 
-    fun onMovieClick(movie: Movie) {
-        val movies = _state.value.movie.toMutableList()
+     fun onMovieClick(movie: Movie) {
+        viewModelScope.launch {
+            dao.updateMovie(movie.copy(favorite = !movie.favorite).toLocalMovie())
+        }
+/*        val movies = _state.value.movie.toMutableList()
         movies.replaceAll {
             if (it.id == movie.id) movie.copy(favorite = !movie.favorite) else it
         }
-        _state.value = _state.value.copy(movie = movies)
+        _state.value = _state.value.copy(movie = movies)*/
     }
 }
