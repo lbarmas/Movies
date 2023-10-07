@@ -3,44 +3,25 @@ package com.example.desafioandroid.ui.screens.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.desafioandroid.data.Movie
-import com.example.desafioandroid.data.local.MoviesDao
-import com.example.desafioandroid.data.local.toLocalMovie
-import com.example.desafioandroid.data.local.toMovie
-import com.example.desafioandroid.data.remote.MoviesService
-import com.example.desafioandroid.data.remote.toLocalMovie
-import kotlinx.coroutines.delay
+import com.example.desafioandroid.data.MoviesRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
-class HomeViewModel(private val dao: MoviesDao) : ViewModel() {
+class HomeViewModel(private val repository: MoviesRepository) : ViewModel() {
     private val _state = MutableStateFlow(UIState()) //MutableLiveData
     var state: StateFlow<UIState> = _state //LiveData<UIState>
 
     init {
-        viewModelScope.launch {
-            val isDbEmpty = dao.countMovie() == 0
-            if (isDbEmpty) {
-                _state.value = UIState(loading = true)
-                delay(2000)
-                dao.insertAllMovies(
-                    Retrofit.Builder()
-                        .baseUrl("https://api.themoviedb.org/3/")
-                        //gson factory
-                        .addConverterFactory(GsonConverterFactory.create())
-                        .build()
-                        .create(MoviesService::class.java)
-                        .getMovies()
-                        .results
-                        .map { it.toLocalMovie() }
-                )
-            }
-            _state.value = UIState(
-                loading = false,
-                movie = dao.getMovies().map { it.toMovie() })
-        }
+      viewModelScope.launch {
+          _state.value = UIState(loading = true)
+          repository.requestMovies()
+
+          repository.movies.collect{
+              _state.value = UIState(movie = it)
+          }
+      }
     }
 
     data class UIState(
@@ -50,7 +31,7 @@ class HomeViewModel(private val dao: MoviesDao) : ViewModel() {
 
      fun onMovieClick(movie: Movie) {
         viewModelScope.launch {
-            dao.updateMovie(movie.copy(favorite = !movie.favorite).toLocalMovie())
+            repository.updateMovie(movie.copy(favorite = !movie.favorite))
         }
 /*        val movies = _state.value.movie.toMutableList()
         movies.replaceAll {
